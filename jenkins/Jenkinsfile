@@ -3,15 +3,20 @@ pipeline {
 
     stages {
         stage('Unit Test-Backend') {
-            agent {
-                docker {
-                    image 'snakee/golang-junit:1.21'
-                    reuseNode true
-                }
-            }
             steps {
-                dir('bugtracker-backend') {
-                    sh 'go test -v ./...'
+                script {
+                    // Run inside the golang test container
+                    withDockerContainer(image: 'snakee/golang-junit:1.21',
+                                        args: "-v ${env.WORKSPACE}:/workspace -w /workspace") {
+                        dir('bugtracker-backend') {
+                            // Redirect Go cache to a writable folder inside workspace
+                            sh '''
+                                export GOCACHE=/workspace/.cache/go-build
+                                mkdir -p $GOCACHE
+                                go test -v ./...
+                            '''
+                        }
+                    }
                 }
             }
         }
