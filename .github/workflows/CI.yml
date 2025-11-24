@@ -17,7 +17,25 @@ jobs:
         with:
           go-version: "1.21"
           cache-dependency-path: bugtracker-backend/go.sum
+
       - name: Execute Backend Unit Tests
         working-directory: ./bugtracker-backend
+        run: go test -v ./...
+
+  unit-test-frontend:   # keep job IDs lowercase for consistency
+    needs: unit-test-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Execute Frontend Unit Tests
+        working-directory: ./bugtracker-frontend
         run: |
-          go test -v ./...
+          npm ci
+          npm test
