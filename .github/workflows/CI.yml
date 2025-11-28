@@ -31,7 +31,7 @@ jobs:
       - name: Execute Backend Unit Tests
         working-directory: ./bugtracker-backend
         run: go test -v ./... 2>&1 | go-junit-report > test-results.xml
-        reporters: jest-junit
+        reporter: jest-junit
 
   unit-test-frontend:   # keep job IDs lowercase for consistency
     needs: unit-test-backend
