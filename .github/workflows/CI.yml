@@ -31,7 +31,7 @@ jobs:
         with:
           name: Backend Unit Tests Report
           path: bugtracker-backend/test-results.xml
-          reporter: go-junit
+          reporter: go-test
 
   unit-test-frontend:
     needs: unit-test-backend
